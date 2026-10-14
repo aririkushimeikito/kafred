@@ -40,7 +40,6 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 │       ├── logo-320.png       Header/footer size
 │       ├── favicon.png        512px favicon source
 │       ├── og-image.jpg       Social-sharing image (1200×630)
-│       ├── hero/              Home hero photo (1000px and 1600px WebP)
 │       └── projects/          15 project photos, each at 800px and 1600px WebP
 ├── favicon.ico                Multi-size ICO (16/32/48)
 ├── robots.txt
@@ -91,9 +90,9 @@ All content is plain HTML. The header, footer and CTA band are repeated in each 
    - `data-category` (space-separated: `granite`, `marble`, `gold`, `etched`, `portrait`, `installed`, `pet`).
 4. Featured photos on the home page use the same markup in `index.html`.
 
-### Changing the hero photo
+### Changing the hero slideshow
 
-Replace the two files in `assets/images/hero/` (1000px and 1600px wide) and update the `width`/`height` attributes on the hero `<img>` in `index.html`. The hero image is intentionally **not** lazy-loaded and is preloaded in the `<head>`.
+The home hero is a crossfade slideshow of six `<figure class="hero-slide">` blocks in `index.html`, each pointing at a photo in `assets/images/projects/` (800px and 1600px versions). To swap a photo, change the `src`, `srcset`, `width`, `height`, `alt` and `data-caption` of one slide. To add or remove slides, add or remove a `<figure>` and the matching `<button class="hero-slides__dot">`, and update the "Photo n of 6" labels. The first slide is intentionally **not** lazy-loaded and is preloaded in the `<head>` (`<link rel="preload" as="image" ...>`); keep that line in sync if you change the first photo. The interval is set by `data-interval` (milliseconds) on the slideshow element. Auto-advance pauses on hover, focus and the pause button, and is disabled for visitors who prefer reduced motion.
 
 ### Logo and favicon
 
@@ -114,6 +113,7 @@ Gold text is only used on dark backgrounds; on the light sections the darker gol
 
 - Mobile navigation with `aria-expanded`, Escape-to-close and focus management.
 - Sticky header shadow on scroll.
+- Hero slideshow (six project photos, crossfade, prev/next, dots, pause, swipe, keyboard; auto-advance off under `prefers-reduced-motion`).
 - Home-page ticker (pure CSS animation, paused on hover, disabled under `prefers-reduced-motion`).
 - Gallery filters (Our Work) with live status text.
 - Lightbox with previous/next, arrow keys, Escape, swipe and focus trapping.

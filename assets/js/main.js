@@ -62,6 +62,69 @@
     if (desktop.addEventListener) { desktop.addEventListener("change", onChange); } else { desktop.addListener(onChange); }
   }
 
+  /* ---------- Hero slideshow ----------
+     Crossfades between project photos. Auto-advance pauses on hover, focus,
+     when the tab is hidden, or when the visitor presses pause; it is off
+     entirely under prefers-reduced-motion (manual controls still work). */
+  var slideshow = document.querySelector("[data-slideshow]");
+  if (slideshow) {
+    var slides = Array.prototype.slice.call(slideshow.querySelectorAll(".hero-slide"));
+    var dots = Array.prototype.slice.call(slideshow.querySelectorAll("[data-slide-to]"));
+    var pauseBtn = slideshow.querySelector("[data-slide-pause]");
+    var captionEl = document.querySelector("[data-slide-caption]");
+    var interval = parseInt(slideshow.getAttribute("data-interval"), 10) || 5000;
+    var index = 0, timer = null, userPaused = false, hovering = false;
+
+    var goTo = function (i) {
+      index = (i + slides.length) % slides.length;
+      slides.forEach(function (s, n) {
+        var active = n === index;
+        s.classList.toggle("is-active", active);
+        if (active) { s.removeAttribute("aria-hidden"); } else { s.setAttribute("aria-hidden", "true"); }
+      });
+      dots.forEach(function (d, n) { if (n === index) { d.setAttribute("aria-current", "true"); } else { d.removeAttribute("aria-current"); } });
+      if (captionEl) { captionEl.textContent = slides[index].getAttribute("data-caption") || ""; }
+    };
+    var stop = function () { if (timer) { clearInterval(timer); timer = null; } };
+    var start = function () {
+      stop();
+      if (reduceMotion || userPaused || hovering || document.hidden || slides.length < 2) { return; }
+      timer = setInterval(function () { goTo(index + 1); }, interval);
+    };
+    var restart = function () { start(); };
+
+    slideshow.querySelector("[data-slide-prev]").addEventListener("click", function () { goTo(index - 1); restart(); });
+    slideshow.querySelector("[data-slide-next]").addEventListener("click", function () { goTo(index + 1); restart(); });
+    dots.forEach(function (d) { d.addEventListener("click", function () { goTo(parseInt(d.getAttribute("data-slide-to"), 10)); restart(); }); });
+    if (pauseBtn) {
+      if (reduceMotion) { pauseBtn.hidden = true; }
+      pauseBtn.addEventListener("click", function () {
+        userPaused = !userPaused;
+        pauseBtn.setAttribute("aria-pressed", userPaused ? "true" : "false");
+        pauseBtn.setAttribute("aria-label", userPaused ? "Play slideshow" : "Pause slideshow");
+        userPaused ? stop() : start();
+      });
+    }
+    slideshow.addEventListener("mouseenter", function () { hovering = true; stop(); });
+    slideshow.addEventListener("mouseleave", function () { hovering = false; start(); });
+    slideshow.addEventListener("focusin", function () { hovering = true; stop(); });
+    slideshow.addEventListener("focusout", function (e) { if (!slideshow.contains(e.relatedTarget)) { hovering = false; start(); } });
+    slideshow.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") { e.preventDefault(); goTo(index - 1); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); goTo(index + 1); }
+    });
+    document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+    var sx = null;
+    slideshow.addEventListener("touchstart", function (e) { sx = e.changedTouches[0].clientX; }, { passive: true });
+    slideshow.addEventListener("touchend", function (e) {
+      if (sx === null) { return; }
+      var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) { goTo(dx > 0 ? index - 1 : index + 1); restart(); }
+    }, { passive: true });
+    goTo(0);
+    start();
+  }
+
   /* ---------- Reveal on scroll (subtle, respects reduced motion) ---------- */
   var reveals = document.querySelectorAll(".reveal");
   if (reveals.length) {
