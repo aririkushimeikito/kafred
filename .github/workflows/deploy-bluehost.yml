@@ -6,8 +6,10 @@
 #   FTP_USERNAME   the FTP account user, e.g. deploy@kafredlapida.com
 #   FTP_PASSWORD   that account's password
 # Optional repository *variable* (not secret):
-#   FTP_SERVER_DIR the remote folder, default "public_html/" (use the addon domain's
-#                  document root if kafredlapida.com is not the primary domain)
+#   FTP_SERVER_DIR remote folder relative to the FTP account's home. Default "./",
+#                  which is right for a dedicated FTP account whose directory IS the
+#                  site's document root. If you log in with the main cPanel user
+#                  instead, set it to "public_html/" (or the addon domain's root).
 #
 # Until the secrets exist the workflow finishes successfully with a notice
 # instead of failing, so merges to main are never blocked.
@@ -57,7 +59,7 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: ./
-          server-dir: ${{ vars.FTP_SERVER_DIR || 'public_html/' }}
+          server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
           state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: false
           exclude: |

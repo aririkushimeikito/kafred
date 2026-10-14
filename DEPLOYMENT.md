@@ -26,7 +26,7 @@ One-time setup:
    - `FTP_SERVER` = `ftp.kafredlapida.com` (or the host shown by Bluehost)
    - `FTP_USERNAME` = `deploy@kafredlapida.com` (the full FTP user name Bluehost displays)
    - `FTP_PASSWORD` = the password you generated
-   If the FTP account's directory is *not* the site root, also add a repository **variable** `FTP_SERVER_DIR` with the folder to upload into (for example `public_html/kafredlapida.com/`). Leave it unset when the FTP account already points at the document root and set `FTP_SERVER_DIR` to `./`; otherwise the default `public_html/` is used.
+   The workflow uploads into the FTP account's own directory (`./`), which is correct when you created a dedicated FTP account pointed at the site's document root as in step 1. If you instead use the main cPanel user name (whose home is one level above), add a repository **variable** (*Variables* tab, not a secret) named `FTP_SERVER_DIR` with the value `public_html/`, or the addon domain's document root such as `public_html/kafredlapida.com/`.
 3. **Run the first deployment.** Go to the *Actions* tab → *Deploy to Bluehost* → *Run workflow*. The first run uploads everything (about 6 MB); later runs upload only files that changed, tracked by a small `.ftp-deploy-sync-state.json` file on the server.
 4. Open https://kafredlapida.com/ and check the pages.
 
