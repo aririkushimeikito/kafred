@@ -2,24 +2,27 @@
 
 This is a fully static site: upload the project folder as-is to any static host. There is no build step.
 
-## 1. Before you launch: set the production domain
+## 1. Current deployment
 
-The site ships with the placeholder domain **`https://example.com`** in:
+The site is deployed with **GitHub Pages** from the `main` branch of `aririkushimeikito/kafred` and is served at:
 
-- the `<link rel="canonical">` and Open Graph / Twitter URLs in the `<head>` of all five pages,
-- the JSON-LD structured data in all five pages,
-- `sitemap.xml`,
-- `robots.txt`.
+**https://aririkushimeikito.github.io/kafred/**
 
-Replace it with the real domain (no trailing slash) in every file. From the project root:
+Every push to `main` triggers the "pages build and deployment" workflow automatically (visible under the repository's *Actions* tab); the site updates within a minute or two.
+
+That URL is baked into the `<link rel="canonical">`, Open Graph / Twitter URLs and JSON-LD of all five pages, plus `sitemap.xml` and `robots.txt`.
+
+### Moving to a custom domain
+
+If you later attach a custom domain (recommended for search visibility), replace the URL in every file. From the project root:
 
 ```bash
-# macOS / Linux — replace example.com with your domain
-grep -rl "https://example.com" --include="*.html" --include="*.xml" --include="*.txt" . \
-  | xargs sed -i 's#https://example.com#https://www.your-domain.com#g'
+# macOS / Linux — replace with your domain, no trailing slash
+grep -rl "https://aririkushimeikito.github.io/kafred" --include="*.html" --include="*.xml" --include="*.txt" . \
+  | xargs sed -i 's#https://aririkushimeikito.github.io/kafred#https://www.your-domain.com#g'
 ```
 
-On Windows, use the "Replace in Files" feature of VS Code or Notepad++ with the same search and replacement strings.
+On Windows, use the "Replace in Files" feature of VS Code or Notepad++ with the same search and replacement strings. Then add the domain under *Settings → Pages → Custom domain* (GitHub creates a `CNAME` file) and point a DNS `CNAME` record at `aririkushimeikito.github.io`.
 
 Also update the `<lastmod>` dates in `sitemap.xml` when pages change.
 
@@ -37,7 +40,7 @@ Each page lives at `folder/index.html`, so hosts serve:
 
 No rewrite rules or JavaScript routing are involved. The `.html` files are never linked directly, and all links, canonicals and sitemap entries use the folder URLs above.
 
-Internal links and asset paths are **root-relative** (`/assets/css/style.css`). This means the site must be deployed at the **root of a domain or subdomain** (e.g. `https://www.kafred.example/`), not in a sub-folder such as `https://user.github.io/kafred/`. See the GitHub Pages note below.
+Internal links and asset paths are **relative** (`assets/css/style.css` from the home page, `../assets/css/style.css` from a sub-page). The site therefore works both at a domain root and under a sub-path such as `https://aririkushimeikito.github.io/kafred/` with no changes.
 
 ## 3. Host-specific instructions
 
@@ -52,10 +55,10 @@ Internal links and asset paths are **root-relative** (`/assets/css/style.css`). 
 2. Framework preset: *None*. Build command: *(empty)*. Output directory: `/`.
 3. Directory index files are served automatically.
 
-### GitHub Pages
-1. Push the repository and enable Pages (Settings → Pages → Deploy from branch → `main`, folder `/root`).
-2. The included `.nojekyll` file stops Jekyll processing.
-3. **Use a custom domain** (Settings → Pages → Custom domain, and a `CNAME` DNS record) so the site is served from the root. A project page at `https://<user>.github.io/<repo>/` would break the root-relative paths; if you must deploy to a sub-path, do a find-and-replace of `href="/` and `src="/` with `href="/<repo>/` and `src="/<repo>/` (and `srcset="/`, `url("/`), or use a user/organisation Pages site (`<user>.github.io`).
+### GitHub Pages (current host)
+1. Pages is enabled under *Settings → Pages* with *Deploy from a branch* → `main`, folder `/ (root)`.
+2. The included `.nojekyll` file stops Jekyll processing, so files are served exactly as committed.
+3. Because paths are relative, the project URL `https://aririkushimeikito.github.io/kafred/` works as-is. A custom domain also works without changes other than the URL replacement in section 1.
 
 ### Vercel, Firebase Hosting, Amazon S3 + CloudFront, traditional hosting (cPanel / FTP)
 Upload the files to the web root (`public_html`, `www`, the bucket root, etc.). Make sure directory index documents are set to `index.html` (S3: set *Index document* to `index.html` and, for sub-folder URLs, serve through CloudFront with a default root object or an origin-request function that appends `index.html`; most other hosts do this by default).
@@ -92,7 +95,7 @@ Whichever option you choose, test a submission after deployment.
 
 ## 6. Launch checklist
 
-- [ ] Replace `https://example.com` everywhere (section 1).
+- [ ] If using a custom domain, replace the GitHub Pages URL everywhere (section 1).
 - [ ] Confirm `https://your-domain/sitemap.xml` and `/robots.txt` load.
 - [ ] Submit the sitemap in Google Search Console; create or claim the Google Business Profile with the same name, address and phone.
 - [ ] Open `/contact/` and check the map, the directions link and the form.

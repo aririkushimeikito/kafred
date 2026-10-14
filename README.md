@@ -17,7 +17,9 @@ A hand-built static website for **Kafred Granite & Marble Installation Services*
 | Our Work  | `/our-work/`  | `our-work/index.html`  |
 | Contact   | `/contact/`   | `contact/index.html`   |
 
-Clean URLs come from the folder structure (each page is an `index.html` inside its own directory). Every static host serves `/about/` from `about/index.html` without any rewrite rules. Internal links are root-relative (`/about/`, `/assets/...`), so the site must be served from the root of a domain or subdomain (see `DEPLOYMENT.md` for sub-path hosting).
+Clean URLs come from the folder structure (each page is an `index.html` inside its own directory). Every static host serves `/about/` from `about/index.html` without any rewrite rules. Internal links and asset paths are **relative** (`about/`, `../assets/...`), so the site works at a domain root *and* under a sub-path such as GitHub Pages' `https://aririkushimeikito.github.io/kafred/`.
+
+**Live site:** https://aririkushimeikito.github.io/kafred/ (GitHub Pages, deployed from the `main` branch).
 
 ## Project structure
 
@@ -50,7 +52,7 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 
 ## Preview locally
 
-The pages use root-relative paths, so open them through a local web server rather than double-clicking the HTML files.
+Open the pages through a local web server (recommended) or open `index.html` directly in a browser; relative paths work either way.
 
 ```bash
 # Python (built in on most systems)
@@ -80,7 +82,7 @@ All content is plain HTML. The header, footer and CTA band are repeated in each 
 ### Replacing or adding project photos
 
 1. Export the photo at two widths: **800px** (grid) and **1600px** (lightbox) on the longest side, as WebP (quality ~80–85). Any image editor, Squoosh, or ImageMagick (`magick in.jpg -resize 1600x1600 -quality 84 out-1600.webp`) works.
-2. Name both files descriptively, for example `lapida-black-granite-gold-lettering-800.webp` and `...-1600.webp`, and place them in `assets/images/projects/`.
+2. Name both files descriptively, for example `lapida-black-granite-gold-lettering-800.webp` and `...-1600.webp`, and place them in `assets/images/projects/`. Pages inside sub-folders reference them as `../assets/images/projects/...`; the home page as `assets/images/projects/...`.
 3. Copy an existing `<figure class="work-item">` block in `our-work/index.html` and update:
    - `href` (1600px file) and `data-width` / `data-height` (its pixel size),
    - `src`, `srcset`, `width`, `height` (800px file and its pixel size),
@@ -120,6 +122,14 @@ Gold text is only used on dark backgrounds; on the light sections the darker gol
 - Dynamic copyright year.
 
 Everything degrades gracefully with JavaScript disabled: links, phone numbers, images and the form's native fallback still work.
+
+## Packaging
+
+To rebuild the delivery ZIP from the repository:
+
+```bash
+git archive --format=zip --prefix=Kafred-Granite-Marble-Website/ -o Kafred-Granite-Marble-Website.zip main
+```
 
 ## External dependencies
 

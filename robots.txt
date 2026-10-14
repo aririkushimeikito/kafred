@@ -1,5 +1,5 @@
-# Replace https://example.com with the production domain before launch (see DEPLOYMENT.md)
+# Update the Sitemap URL if the domain changes (see DEPLOYMENT.md)
 User-agent: *
 Allow: /
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://aririkushimeikito.github.io/kafred/sitemap.xml
