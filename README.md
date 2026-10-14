@@ -40,7 +40,7 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 │       ├── logo-320.png       Header/footer size
 │       ├── favicon.png        512px favicon source
 │       ├── og-image.jpg       Social-sharing image (1200×630)
-│       └── projects/          15 project photos, each at 800px and 1600px WebP
+│       └── projects/          Project photos, each at 800px and 1600px WebP (plus one 4:3 hero crop)
 ├── favicon.ico                Multi-size ICO (16/32/48)
 ├── robots.txt
 ├── sitemap.xml
@@ -92,7 +92,7 @@ All content is plain HTML. The header, footer and CTA band are repeated in each 
 
 ### Changing the hero slideshow
 
-The home hero is a crossfade slideshow of six `<figure class="hero-slide">` blocks in `index.html`, each pointing at a photo in `assets/images/projects/` (800px and 1600px versions). To swap a photo, change the `src`, `srcset`, `width`, `height`, `alt` and `data-caption` of one slide. To add or remove slides, add or remove a `<figure>` and the matching `<button class="hero-slides__dot">`, and update the "Photo n of 6" labels. The first slide is intentionally **not** lazy-loaded and is preloaded in the `<head>` (`<link rel="preload" as="image" ...>`); keep that line in sync if you change the first photo. The interval is set by `data-interval` (milliseconds) on the slideshow element. Auto-advance pauses on hover, focus and the pause button, and is disabled for visitors who prefer reduced motion.
+The home hero is a crossfade slideshow of seven `<figure class="hero-slide">` blocks in `index.html`, each pointing at a photo in `assets/images/projects/` (800px and 1600px versions). To swap a photo, change the `src`, `srcset`, `width`, `height`, `alt` and `data-caption` of one slide. To add or remove slides, add or remove a `<figure>` and the matching `<button class="hero-slides__dot">`, and update the "Photo n of 7" labels. The first slide is intentionally **not** lazy-loaded and is preloaded in the `<head>` (`<link rel="preload" as="image" ...>`); keep that line in sync if you change the first photo. The interval is set by `data-interval` (milliseconds) on the slideshow element. Auto-advance pauses on hover, focus and the pause button, and is disabled for visitors who prefer reduced motion.
 
 ### Logo and favicon
 
@@ -113,7 +113,7 @@ Gold text is only used on dark backgrounds; on the light sections the darker gol
 
 - Mobile navigation with `aria-expanded`, Escape-to-close and focus management.
 - Sticky header shadow on scroll.
-- Hero slideshow (six project photos, crossfade, prev/next, dots, pause, swipe, keyboard; auto-advance off under `prefers-reduced-motion`).
+- Hero slideshow (seven project photos, crossfade, prev/next, dots, pause, swipe, keyboard; auto-advance off under `prefers-reduced-motion`).
 - Home-page ticker (pure CSS animation, paused on hover, disabled under `prefers-reduced-motion`).
 - Gallery filters (Our Work) with live status text.
 - Lightbox with previous/next, arrow keys, Escape, swipe and focus trapping.
