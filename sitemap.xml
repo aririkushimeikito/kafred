@@ -1,24 +1,199 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Site URL: update <loc> values if the domain changes (see DEPLOYMENT.md) -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://aririkushimeikito.github.io/kafred/</loc>
+    <loc>https://kafredlapida.com/</loc>
     <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-gold-lettering-two-portraits-installed-1125.webp</image:loc>
+      <image:title>White marble lapida with gold lettering and two ceramic portraits, installed at the gravesite</image:title>
+      <image:caption>White marble lapida with gold lettering and two ceramic portraits, installed at a gravesite with a basket of flowers</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-brass-fittings-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:title>
+      <image:caption>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-portrait-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold script lettering, scroll border and ceramic portrait</image:title>
+      <image:caption>Black galaxy granite lapida with gold script lettering, gold scroll border and a ceramic portrait</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-laser-etched-portrait-signature-1600.webp</image:loc>
+      <image:title>Black granite lapida with etched portrait, gold signature, dove and cross</image:title>
+      <image:caption>Black granite lapida with a laser-etched portrait, an engraved signature in gold, and dove and cross details</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-black-lettering-veined-1600.webp</image:loc>
+      <image:title>Veined white marble lapida with bold black lettering and geometric corner borders</image:title>
+      <image:caption>White veined marble lapida with bold black engraved lettering and geometric corner borders</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-two-portraits-script-lettering-1600.webp</image:loc>
+      <image:title>Black granite family lapida with two ceramic portraits and silver script lettering</image:title>
+      <image:caption>Black granite lapida with two oval ceramic portraits and silver script lettering for a family memorial</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-gold-border-silver-script-1600.webp</image:loc>
+      <image:title>Black granite lapida with gold border, silver script, cross and praying hands</image:title>
+      <image:caption>Black granite lapida with a gold border, silver script lettering, engraved cross and praying hands</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-blue-pearl-granite-installed-gravesite-1600.webp</image:loc>
+      <image:title>Blue pearl granite lapida installed at the gravesite</image:title>
+      <image:caption>Blue pearl granite lapida installed at a gravesite, with candles and orchids placed beside it</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-script-dove-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold script, dove, border and brass fittings</image:title>
+      <image:caption>Black galaxy granite lapida with gold script lettering, dove engraving, gold border and brass standoff fittings</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-dual-portraits-praying-angels-1600.webp</image:loc>
+      <image:title>Black granite lapida with twin ceramic portraits, praying angels and silver lettering</image:title>
+      <image:caption>Black granite lapida with two oval ceramic portraits, praying angel engravings and silver lettering</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://aririkushimeikito.github.io/kafred/about/</loc>
+    <loc>https://kafredlapida.com/about/</loc>
     <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-workshop-angle-1600.webp</image:loc>
+      <image:title>White marble lapida on the bench, showing the finished edge and black engraved lettering</image:title>
+      <image:caption>Angled view of a white marble lapida on the workshop bench, showing the stone&#x27;s thickness and black engraved lettering</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-laser-etched-portrait-scroll-border-1600.webp</image:loc>
+      <image:title>Black granite lapida with an etched portrait, scroll border and lettering for two names</image:title>
+      <image:caption>Black granite lapida with a laser-etched portrait, scroll border and white lettering for two names</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-brass-fittings-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:title>
+      <image:caption>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://aririkushimeikito.github.io/kafred/services/</loc>
+    <loc>https://kafredlapida.com/services/</loc>
     <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-brass-fittings-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:title>
+      <image:caption>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-laser-etched-portrait-signature-1600.webp</image:loc>
+      <image:title>Black granite lapida with etched portrait, gold signature, dove and cross</image:title>
+      <image:caption>Black granite lapida with a laser-etched portrait, an engraved signature in gold, and dove and cross details</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-blue-pearl-granite-installed-gravesite-1600.webp</image:loc>
+      <image:title>Blue pearl granite lapida installed at the gravesite</image:title>
+      <image:caption>Blue pearl granite lapida installed at a gravesite, with candles and orchids placed beside it</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-black-lettering-veined-1600.webp</image:loc>
+      <image:title>Veined white marble lapida with bold black lettering and geometric corner borders</image:title>
+      <image:caption>White veined marble lapida with bold black engraved lettering and geometric corner borders</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/pet-memorial-white-marble-gold-lettering-doves-1600.webp</image:loc>
+      <image:title>White marble pet memorial plaque with gold lettering, doves and photo insert</image:title>
+      <image:caption>White marble pet memorial plaque with gold lettering, doves, floral corners and a photo insert</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://aririkushimeikito.github.io/kafred/our-work/</loc>
+    <loc>https://kafredlapida.com/our-work/</loc>
     <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-dual-portraits-praying-angels-1600.webp</image:loc>
+      <image:title>Black granite lapida with twin ceramic portraits, praying angels and silver lettering</image:title>
+      <image:caption>Black granite lapida with two oval ceramic portraits, praying angel engravings and silver lettering</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-portrait-cross-wreath-1600.webp</image:loc>
+      <image:title>Black granite lapida with ceramic portrait, cross, praying hands and laurel wreath</image:title>
+      <image:caption>Black granite lapida with a ceramic portrait, engraved cross, praying hands and laurel wreath in silver</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-workshop-angle-1600.webp</image:loc>
+      <image:title>White marble lapida on the bench, showing the finished edge and black engraved lettering</image:title>
+      <image:caption>Angled view of a white marble lapida on the workshop bench, showing the stone&#x27;s thickness and black engraved lettering</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-black-lettering-doves-1600.webp</image:loc>
+      <image:title>White marble lapida with black lettering, doves, praying hands and scroll border</image:title>
+      <image:caption>White marble lapida with black engraved lettering, doves, praying hands and a scroll border</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-laser-etched-portrait-scroll-border-1600.webp</image:loc>
+      <image:title>Black granite lapida with an etched portrait, scroll border and lettering for two names</image:title>
+      <image:caption>Black granite lapida with a laser-etched portrait, scroll border and white lettering for two names</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-two-portraits-script-lettering-1600.webp</image:loc>
+      <image:title>Black granite family lapida with two ceramic portraits and silver script lettering</image:title>
+      <image:caption>Black granite lapida with two oval ceramic portraits and silver script lettering for a family memorial</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-portrait-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold script lettering, scroll border and ceramic portrait</image:title>
+      <image:caption>Black galaxy granite lapida with gold script lettering, gold scroll border and a ceramic portrait</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-brass-fittings-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:title>
+      <image:caption>Black galaxy granite lapida with gold lettering, rose border and brass standoff fittings</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-blue-pearl-granite-installed-gravesite-1600.webp</image:loc>
+      <image:title>Blue pearl granite lapida installed at the gravesite</image:title>
+      <image:caption>Blue pearl granite lapida installed at a gravesite, with candles and orchids placed beside it</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-script-dove-1600.webp</image:loc>
+      <image:title>Black galaxy granite lapida with gold script, dove, border and brass fittings</image:title>
+      <image:caption>Black galaxy granite lapida with gold script lettering, dove engraving, gold border and brass standoff fittings</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-gold-border-silver-script-1600.webp</image:loc>
+      <image:title>Black granite lapida with gold border, silver script, cross and praying hands</image:title>
+      <image:caption>Black granite lapida with a gold border, silver script lettering, engraved cross and praying hands</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-granite-laser-etched-portrait-signature-1600.webp</image:loc>
+      <image:title>Black granite lapida with etched portrait, gold signature, dove and cross</image:title>
+      <image:caption>Black granite lapida with a laser-etched portrait, an engraved signature in gold, and dove and cross details</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-black-galaxy-granite-gold-lettering-two-names-1600.webp</image:loc>
+      <image:title>Vertical black galaxy granite lapida with gold lettering, cross and rose borders</image:title>
+      <image:caption>Vertical black galaxy granite lapida with gold lettering for two names, an engraved cross and rose borders</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/pet-memorial-white-marble-gold-lettering-doves-1600.webp</image:loc>
+      <image:title>White marble pet memorial plaque with gold lettering, doves and photo insert</image:title>
+      <image:caption>White marble pet memorial plaque with gold lettering, doves, floral corners and a photo insert</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kafredlapida.com/assets/images/projects/lapida-white-marble-black-lettering-veined-1600.webp</image:loc>
+      <image:title>Veined white marble lapida with bold black lettering and geometric corner borders</image:title>
+      <image:caption>White veined marble lapida with bold black engraved lettering and geometric corner borders</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://aririkushimeikito.github.io/kafred/contact/</loc>
+    <loc>https://kafredlapida.com/contact/</loc>
     <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

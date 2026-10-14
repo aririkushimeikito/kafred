@@ -2,29 +2,38 @@
 
 This is a fully static site: upload the project folder as-is to any static host. There is no build step.
 
-## 1. Current deployment
+## 1. Production hosting: kafredlapida.com on Bluehost
 
-The site is deployed with **GitHub Pages** from the `main` branch of `aririkushimeikito/kafred` and is served at:
+The production domain is **https://kafredlapida.com**, hosted on Bluehost (shared Apache hosting). That URL is already baked into the `<link rel="canonical">`, `hreflang`, Open Graph / Twitter URLs and JSON-LD of every page, plus `sitemap.xml`, `robots.txt` and `llms.txt`.
 
-**https://aririkushimeikito.github.io/kafred/**
+### Upload steps
 
-Every push to `main` triggers the "pages build and deployment" workflow automatically (visible under the repository's *Actions* tab); the site updates within a minute or two.
+1. In the Bluehost control panel open **File Manager** (or connect with FTP/SFTP using the credentials under *Advanced → FTP Accounts*).
+2. Open the **`public_html`** folder for kafredlapida.com (if the domain is an addon domain, use its document root instead).
+3. Upload the **contents** of this project (not the folder itself) so that `index.html`, `.htaccess`, `about/`, `assets/`, etc. sit directly inside `public_html`. The easiest way is to upload `Kafred-Granite-Marble-Website.zip` and use File Manager's **Extract**, then move the extracted files up one level if they land in a sub-folder.
+4. Make sure hidden files are shown (File Manager → *Settings → Show Hidden Files*) and confirm **`.htaccess`** and **`.nojekyll`** were uploaded. `.htaccess` provides the HTTPS and non-www redirects, the `/folder/index.html → /folder/` redirect, the custom 404 page, compression, caching and security headers.
+5. Enable the free SSL certificate: *Security → SSL/TLS* (Bluehost issues a Let's Encrypt/AutoSSL certificate automatically once DNS points at the hosting). Wait until `https://kafredlapida.com` loads with a padlock.
+6. Open https://kafredlapida.com/, /about/, /services/, /our-work/, /contact/ and a wrong URL (to see the 404 page). Also check that `http://www.kafredlapida.com/about/index.html` redirects to `https://kafredlapida.com/about/`.
 
-That URL is baked into the `<link rel="canonical">`, Open Graph / Twitter URLs and JSON-LD of all five pages, plus `sitemap.xml` and `robots.txt`.
+### Canonical host
 
-### Moving to a custom domain
+The site uses **non-www** (`https://kafredlapida.com`). If you prefer `www`, change the two redirect rules in `.htaccess` and run the URL find-and-replace in the next section with `https://www.kafredlapida.com`.
 
-If you later attach a custom domain (recommended for search visibility), replace the URL in every file. From the project root:
+### If the domain ever changes
+
+Replace the URL in every file. From the project root:
 
 ```bash
-# macOS / Linux — replace with your domain, no trailing slash
-grep -rl "https://aririkushimeikito.github.io/kafred" --include="*.html" --include="*.xml" --include="*.txt" . \
-  | xargs sed -i 's#https://aririkushimeikito.github.io/kafred#https://www.your-domain.com#g'
+# macOS / Linux — replace with the new domain, no trailing slash
+grep -rl "https://kafredlapida.com" --include="*.html" --include="*.xml" --include="*.txt" . \
+  | xargs sed -i 's#https://kafredlapida.com#https://www.new-domain.com#g'
 ```
 
-On Windows, use the "Replace in Files" feature of VS Code or Notepad++ with the same search and replacement strings. Then add the domain under *Settings → Pages → Custom domain* (GitHub creates a `CNAME` file) and point a DNS `CNAME` record at `aririkushimeikito.github.io`.
+On Windows, use the "Replace in Files" feature of VS Code or Notepad++ with the same search and replacement strings. Also update the host in `.htaccess` and the `<lastmod>` dates in `sitemap.xml` when pages change.
 
-Also update the `<lastmod>` dates in `sitemap.xml` when pages change.
+### GitHub Pages preview
+
+The repository also publishes a preview at `https://aririkushimeikito.github.io/kafred/` from the `main` branch. Because every page's canonical URL points to kafredlapida.com, search engines will treat the Bluehost site as the original. Once the Bluehost site is live you may disable GitHub Pages (Settings → Pages → *Unpublish site*) to avoid confusion, or keep it as a staging preview.
 
 ## 2. How clean URLs work
 
@@ -40,30 +49,14 @@ Each page lives at `folder/index.html`, so hosts serve:
 
 No rewrite rules or JavaScript routing are involved. The `.html` files are never linked directly, and all links, canonicals and sitemap entries use the folder URLs above.
 
-Internal links and asset paths are **relative** (`assets/css/style.css` from the home page, `../assets/css/style.css` from a sub-page). The site therefore works both at a domain root and under a sub-path such as `https://aririkushimeikito.github.io/kafred/` with no changes.
+Internal links and asset paths are **relative** (`assets/css/style.css` from the home page, `../assets/css/style.css` from a sub-page). The site therefore works at the domain root on Bluehost and also under a sub-path such as the GitHub Pages preview. The only root-relative page is `404.html`, because Apache serves it for URLs at any depth.
 
-## 3. Host-specific instructions
+## 3. Other hosts (if you ever move)
 
-### Netlify
-1. Drag the project folder onto https://app.netlify.com/drop, or connect the Git repository.
-2. Build command: *(none)*. Publish directory: `/` (the project root).
-3. Netlify serves `about/index.html` for `/about/` automatically and adds the trailing slash.
-4. Add your custom domain under *Domain management* and enable HTTPS.
-
-### Cloudflare Pages
-1. Create a project from the Git repository (or direct upload).
-2. Framework preset: *None*. Build command: *(empty)*. Output directory: `/`.
-3. Directory index files are served automatically.
-
-### GitHub Pages (current host)
-1. Pages is enabled under *Settings → Pages* with *Deploy from a branch* → `main`, folder `/ (root)`.
-2. The included `.nojekyll` file stops Jekyll processing, so files are served exactly as committed.
-3. Because paths are relative, the project URL `https://aririkushimeikito.github.io/kafred/` works as-is. A custom domain also works without changes other than the URL replacement in section 1.
-
-### Vercel, Firebase Hosting, Amazon S3 + CloudFront, traditional hosting (cPanel / FTP)
-Upload the files to the web root (`public_html`, `www`, the bucket root, etc.). Make sure directory index documents are set to `index.html` (S3: set *Index document* to `index.html` and, for sub-folder URLs, serve through CloudFront with a default root object or an origin-request function that appends `index.html`; most other hosts do this by default).
-
-Apache servers serve `index.html` for folder URLs by default (`DirectoryIndex index.html`). No `.htaccess` is required.
+- **Netlify / Cloudflare Pages / Vercel:** upload the folder or connect the Git repository with no build command and `/` as the output directory. Directory index files are served automatically; `.htaccess` is ignored there, so re-create the HTTPS/www redirects and the 404 page in the host's own settings (`_redirects` on Netlify, `_redirects` on Cloudflare Pages, `vercel.json` on Vercel).
+- **GitHub Pages:** push to `main` with Pages set to *Deploy from a branch → main → / (root)*. The `.nojekyll` file is included. Use a custom domain (Settings → Pages → Custom domain plus a DNS `CNAME` record) and run the URL replacement above so canonicals match.
+- **Other Apache hosts (cPanel):** identical to Bluehost; upload to the document root with `.htaccess`.
+- **Nginx:** directory URLs work by default with `index index.html;`. Re-create the redirects (`return 301 https://kafredlapida.com$request_uri;`), `error_page 404 /404.html;` and caching headers in the server block.
 
 ## 4. Google Maps embed
 
@@ -95,9 +88,10 @@ Whichever option you choose, test a submission after deployment.
 
 ## 6. Launch checklist
 
-- [ ] If using a custom domain, replace the GitHub Pages URL everywhere (section 1).
-- [ ] Confirm `https://your-domain/sitemap.xml` and `/robots.txt` load.
-- [ ] Submit the sitemap in Google Search Console; create or claim the Google Business Profile with the same name, address and phone.
+- [ ] Files uploaded to `public_html`, including hidden `.htaccess`; SSL active; `http://www.` redirects to `https://kafredlapida.com`.
+- [ ] Confirm `https://kafredlapida.com/sitemap.xml`, `/robots.txt`, `/llms.txt` and `/site.webmanifest` load.
+- [ ] Add the site in Google Search Console (domain property) and Bing Webmaster Tools; submit `sitemap.xml`; use the Rich Results Test on each page to confirm the LocalBusiness, FAQ, Service and ImageGallery data is read.
+- [ ] Create or claim the Google Business Profile with exactly the same name, address and phone number as the website, and link it to https://kafredlapida.com. Add the website link to the Facebook page's *About* section.
 - [ ] Open `/contact/` and check the map, the directions link and the form.
 - [ ] Test on a phone: tap-to-call, Facebook link, menu, gallery lightbox.
 - [ ] Optionally add analytics (none is included).

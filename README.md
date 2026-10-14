@@ -3,7 +3,7 @@
 A hand-built static website for **Kafred Granite & Marble Installation Services**, a lapida (gravestone) engraving maker and granite and marble installer in Burgos, Rodriguez (Montalban), Rizal, Philippines.
 
 - Semantic HTML5, modern CSS3 and vanilla JavaScript only. No frameworks, no build step, no backend.
-- Five pages with clean URLs, local SEO metadata, JSON-LD structured data, sitemap and robots.txt.
+- Five pages with clean URLs, local SEO metadata, FAQ sections, JSON-LD structured data (LocalBusiness, WebSite, WebPage/AboutPage/ContactPage/CollectionPage, Service, FAQPage, ImageGallery, BreadcrumbList), image sitemap, robots.txt and llms.txt.
 - Real project photographs supplied by the company, optimised to WebP in two sizes.
 - Responsive, mobile-first layout tested from 360px to 1440px, with keyboard-accessible menu, filters and lightbox.
 
@@ -17,9 +17,9 @@ A hand-built static website for **Kafred Granite & Marble Installation Services*
 | Our Work  | `/our-work/`  | `our-work/index.html`  |
 | Contact   | `/contact/`   | `contact/index.html`   |
 
-Clean URLs come from the folder structure (each page is an `index.html` inside its own directory). Every static host serves `/about/` from `about/index.html` without any rewrite rules. Internal links and asset paths are **relative** (`about/`, `../assets/...`), so the site works at a domain root *and* under a sub-path such as GitHub Pages' `https://aririkushimeikito.github.io/kafred/`.
+Clean URLs come from the folder structure (each page is an `index.html` inside its own directory). Apache on Bluehost serves `/about/` from `about/index.html` with no special rules; the included `.htaccess` only adds HTTPS/non-www redirects, an `index.html` → `/` redirect, caching and security headers. Internal links and asset paths are **relative** (`about/`, `../assets/...`), so the same files also work under a sub-path (the GitHub Pages preview at `https://aririkushimeikito.github.io/kafred/`).
 
-**Live site:** https://aririkushimeikito.github.io/kafred/ (GitHub Pages, deployed from the `main` branch).
+**Production domain:** https://kafredlapida.com (Bluehost). All canonical URLs, structured data, the sitemap, robots.txt and llms.txt point there. See `DEPLOYMENT.md` for the upload steps.
 
 ## Project structure
 
@@ -41,10 +41,14 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 │       ├── favicon.png        512px favicon source
 │       ├── og-image.jpg       Social-sharing image (1200×630)
 │       └── projects/          Project photos, each at 800px and 1600px WebP (plus one 4:3 hero crop)
+├── 404.html                   Custom not-found page (used by .htaccess ErrorDocument)
+├── .htaccess                  Apache config for Bluehost (HTTPS, non-www, caching, headers)
 ├── favicon.ico                Multi-size ICO (16/32/48)
 ├── robots.txt
-├── sitemap.xml
-├── .nojekyll                  Keeps GitHub Pages from running Jekyll
+├── sitemap.xml                Includes image entries for every project photo
+├── llms.txt                   Plain-text business summary for AI search engines
+├── site.webmanifest           Web app manifest (name, icons, theme colour)
+├── .nojekyll                  Keeps the GitHub Pages preview from running Jekyll
 ├── README.md
 └── DEPLOYMENT.md
 ```
@@ -108,6 +112,16 @@ Design tokens are at the top of `assets/css/style.css`:
 ```
 
 Gold text is only used on dark backgrounds; on the light sections the darker gold (`--gold-dark`) is used for contrast.
+
+## SEO, GEO and AEO checklist (what is built in)
+
+- One H1 per page; H2 for every section and H3 for sub-items, with no skipped levels. Footer headings are plain paragraphs so they do not dilute the outline.
+- Unique titles (under 60 characters) and descriptions (about 150 characters) with the service and location, canonical and `hreflang` links, Open Graph and Twitter tags with image alt text, `robots` directives allowing large image previews, `geo.region` / `geo.placename`, theme colour and a web manifest.
+- Every image has descriptive `alt` text and a `title`; every link has a descriptive `title`; captions name materials and techniques only (never the people on the stones).
+- Visible FAQ sections on Home and Services, marked up as `FAQPage`, with concise first-sentence answers for answer engines.
+- JSON-LD `@graph` on every page: `LocalBusiness` (address, phone, map, Facebook, service area, offer catalogue, `knowsAbout`), `WebSite`, a typed `WebPage` with `speakable` selectors, `BreadcrumbList`, plus `Service` nodes (Services), `ImageGallery` with `ImageObject`s (Our Work).
+- `sitemap.xml` with image entries, `robots.txt`, and `llms.txt` summarising the business for AI assistants.
+- Only verified facts are published: no hours, email, prices, reviews, founding year or certifications.
 
 ## Interactive features (assets/js/main.js)
 
