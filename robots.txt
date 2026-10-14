@@ -1,0 +1,5 @@
+# Replace https://example.com with the production domain before launch (see DEPLOYMENT.md)
+User-agent: *
+Allow: /
+
+Sitemap: https://example.com/sitemap.xml
