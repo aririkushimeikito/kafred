@@ -371,6 +371,14 @@ body.nav-open { overflow: hidden; }
 @media (min-width: 560px) { .work-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
 @media (min-width: 960px) { .work-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
 .work-grid--portfolio .work-item__link img { aspect-ratio: 4 / 3; }
+
+/* Portrait photographs: shown upright instead of cropped to 4:3.
+   In multi-column grids they span two rows (dense packing fills the gaps). */
+.work-grid { grid-auto-flow: dense; }
+.work-item--portrait { display: flex; flex-direction: column; }
+.work-item--portrait .work-item__link { flex: 1 1 auto; min-height: 0; }
+.work-item--portrait .work-item__link img { aspect-ratio: 3 / 4; height: 100%; }
+@media (min-width: 560px) { .work-item--portrait { grid-row: span 2; } }
 .work-item.is-hidden { display: none; }
 .work-grid__empty { padding: 2rem; text-align: center; color: var(--gray); border: 1px dashed var(--line-dark); }
 
