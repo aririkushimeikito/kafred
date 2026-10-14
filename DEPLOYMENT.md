@@ -6,7 +6,7 @@ This is a fully static site: upload the project folder as-is to any static host.
 
 The production domain is **https://kafredlapida.com**, hosted on Bluehost (shared Apache hosting). That URL is already baked into the `<link rel="canonical">`, `hreflang`, Open Graph / Twitter URLs and JSON-LD of every page, plus `sitemap.xml`, `robots.txt` and `llms.txt`.
 
-### Upload steps
+### Upload steps (manual, first time or without GitHub)
 
 1. In the Bluehost control panel open **File Manager** (or connect with FTP/SFTP using the credentials under *Advanced → FTP Accounts*).
 2. Open the **`public_html`** folder for kafredlapida.com (if the domain is an addon domain, use its document root instead).
@@ -14,6 +14,31 @@ The production domain is **https://kafredlapida.com**, hosted on Bluehost (share
 4. Make sure hidden files are shown (File Manager → *Settings → Show Hidden Files*) and confirm **`.htaccess`** and **`.nojekyll`** were uploaded. `.htaccess` provides the HTTPS and non-www redirects, the `/folder/index.html → /folder/` redirect, the custom 404 page, compression, caching and security headers.
 5. Enable the free SSL certificate: *Security → SSL/TLS* (Bluehost issues a Let's Encrypt/AutoSSL certificate automatically once DNS points at the hosting). Wait until `https://kafredlapida.com` loads with a padlock.
 6. Open https://kafredlapida.com/, /about/, /services/, /our-work/, /contact/ and a wrong URL (to see the 404 page). Also check that `http://www.kafredlapida.com/about/index.html` redirects to `https://kafredlapida.com/about/`.
+
+### Automatic deployment from GitHub (recommended)
+
+The repository contains `.github/workflows/deploy-bluehost.yml`. Once three secrets are set, every merge to `main` uploads the site to Bluehost over FTPS, so you keep editing in GitHub (or with Claude) and the live site follows automatically. The GitHub Pages preview keeps working alongside it.
+
+One-time setup:
+
+1. **Create an FTP account in Bluehost.** In the Bluehost panel go to *Advanced* (cPanel) → **FTP Accounts** → *Add FTP Account*. Use a name such as `deploy`, generate a strong password, and set the **Directory** to the document root of kafredlapida.com (`public_html` when it is the primary domain). Note the server name shown under *Configure FTP Client* (usually `ftp.kafredlapida.com`).
+2. **Add the secrets in GitHub.** Open the repository → *Settings* → *Secrets and variables* → *Actions* → *New repository secret* and create:
+   - `FTP_SERVER` = `ftp.kafredlapida.com` (or the host shown by Bluehost)
+   - `FTP_USERNAME` = `deploy@kafredlapida.com` (the full FTP user name Bluehost displays)
+   - `FTP_PASSWORD` = the password you generated
+   If the FTP account's directory is *not* the site root, also add a repository **variable** `FTP_SERVER_DIR` with the folder to upload into (for example `public_html/kafredlapida.com/`). Leave it unset when the FTP account already points at the document root and set `FTP_SERVER_DIR` to `./`; otherwise the default `public_html/` is used.
+3. **Run the first deployment.** Go to the *Actions* tab → *Deploy to Bluehost* → *Run workflow*. The first run uploads everything (about 6 MB); later runs upload only files that changed, tracked by a small `.ftp-deploy-sync-state.json` file on the server.
+4. Open https://kafredlapida.com/ and check the pages.
+
+Notes:
+- The workflow never deletes files it did not upload (`dangerous-clean-slate` is off), so anything else in `public_html` is left alone. If you remove a page from the repository, delete it on the server by hand.
+- `README.md`, `DEPLOYMENT.md`, `.github`, `dist` and Git files are not uploaded; `.htaccess`, `404.html`, `llms.txt`, `sitemap.xml` and `robots.txt` are.
+- Until the secrets exist, the workflow completes with a notice instead of failing.
+- To stop automatic deploys, delete the secrets or disable the workflow in the Actions tab.
+
+### Manual upload (alternative)
+
+If you prefer not to connect GitHub to the hosting, upload the ZIP by hand as described above. Each time the site changes, download a fresh ZIP (`git archive`, see README) and re-upload.
 
 ### Canonical host
 
