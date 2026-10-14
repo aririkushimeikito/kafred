@@ -1,0 +1,5 @@
+# Update the Sitemap URL if the domain changes (see DEPLOYMENT.md)
+User-agent: *
+Allow: /
+
+Sitemap: https://aririkushimeikito.github.io/kafred/sitemap.xml
