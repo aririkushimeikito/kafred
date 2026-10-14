@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aririkushimeikito.github.io/kafred/sitemap.xml
+Sitemap: https://kafredlapida.com/sitemap.xml
