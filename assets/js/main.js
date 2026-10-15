@@ -75,8 +75,16 @@
     var interval = parseInt(slideshow.getAttribute("data-interval"), 10) || 5000;
     var index = 0, timer = null, userPaused = false, hovering = false;
 
+    var loadSlide = function (n) {
+      var img = slides[(n + slides.length) % slides.length].querySelector("img[data-src]");
+      if (!img) { return; }
+      img.srcset = img.getAttribute("data-srcset") || "";
+      img.src = img.getAttribute("data-src");
+      img.removeAttribute("data-src"); img.removeAttribute("data-srcset");
+    };
     var goTo = function (i) {
       index = (i + slides.length) % slides.length;
+      loadSlide(index); loadSlide(index + 1);
       slides.forEach(function (s, n) {
         var active = n === index;
         s.classList.toggle("is-active", active);
@@ -201,7 +209,9 @@
       current = (index + list.length) % list.length;
       var t = list[current];
       var img = t.querySelector("img");
-      lbImg.src = t.getAttribute("href");
+      var medium = t.getAttribute("data-src-medium");
+      var needLarge = Math.max(window.innerWidth, window.innerHeight) * (window.devicePixelRatio || 1) > 1300;
+      lbImg.src = (!needLarge && medium) ? medium : t.getAttribute("href");
       lbImg.alt = img ? img.alt : "";
       if (t.hasAttribute("data-width")) { lbImg.width = t.getAttribute("data-width"); lbImg.height = t.getAttribute("data-height"); }
       lbCap.textContent = t.getAttribute("data-caption") || (img ? img.alt : "");

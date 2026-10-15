@@ -4,7 +4,7 @@ A hand-built static website for **Kafred Granite & Marble Installation Services*
 
 - Semantic HTML5, modern CSS3 and vanilla JavaScript only. No frameworks, no build step, no backend; the contact form is delivered by FormSubmit.
 - Five pages with clean URLs, local SEO metadata, FAQ sections, JSON-LD structured data (LocalBusiness, WebSite, WebPage/AboutPage/ContactPage/CollectionPage, Service, FAQPage, ImageGallery, BreadcrumbList), image sitemap, robots.txt and llms.txt.
-- Real project photographs supplied by the company, optimised to WebP in two sizes.
+- Real project photographs supplied by the company, optimised to WebP at four widths (480, 800, 1200 and 1600px) so each device downloads only the size it needs.
 - Responsive, mobile-first layout tested from 360px to 1440px, with keyboard-accessible menu, filters and lightbox.
 
 ## Pages and URLs
@@ -37,10 +37,10 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 │   ├── icons/                 Favicon PNGs (16–512px)
 │   └── images/
 │       ├── logo.png           Official logo (circular, transparent background)
-│       ├── logo-320.png       Header/footer size
+│       ├── logo-200.webp      Header/footer size (WebP with transparency)
 │       ├── favicon.png        512px favicon source
 │       ├── og-image.jpg       Social-sharing image (1200×630)
-│       └── projects/          Project photos, each at 800px and 1600px WebP (plus one 4:3 hero crop)
+│       └── projects/          Project photos at 480/800/1200/1600px WebP (plus one 4:3 hero crop)
 ├── 404.html                   Custom not-found page (used by .htaccess ErrorDocument)
 ├── .htaccess                  Apache config for Bluehost (HTTPS, non-www, caching, headers)
 ├── favicon.ico                Multi-size ICO (16/32/48)
@@ -84,15 +84,23 @@ All content is plain HTML. The header, footer and CTA band are repeated in each 
 
 ### Replacing or adding project photos
 
-1. Export the photo at two widths: **800px** (grid) and **1600px** (lightbox) on the longest side, as WebP (quality ~80–85). Any image editor, Squoosh, or ImageMagick (`magick in.jpg -resize 1600x1600 -quality 84 out-1600.webp`) works.
-2. Name both files descriptively, for example `lapida-black-granite-gold-lettering-800.webp` and `...-1600.webp`, and place them in `assets/images/projects/`. Pages inside sub-folders reference them as `../assets/images/projects/...`; the home page as `assets/images/projects/...`.
+1. Export the photo at **four widths** on the longest side: 480, 800, 1200 and 1600px, as WebP. Quality 70–78 is enough for engraved stone; use lower (60–66) for photos with grass or other noisy backgrounds, which otherwise stay large. Any image editor, Squoosh, or ImageMagick (`magick in.jpg -resize 1200x1200 -quality 75 out-1200.webp`) works.
+2. Name the files `<descriptive-name>-480.webp`, `-800.webp`, `-1200.webp`, `-1600.webp` and place them in `assets/images/projects/`.
 3. Copy an existing `<figure class="work-item">` block in `our-work/index.html` and update:
-   - `href` (1600px file) and `data-width` / `data-height` (its pixel size),
-   - `src`, `srcset`, `width`, `height` (800px file and its pixel size),
-   - `alt` (describe what is visible; avoid personal names),
+   - `href` (1600px file), `data-src-medium` (1200px file) and `data-width` / `data-height` (the 1600px file's pixel size),
+   - `src` (800px file), `srcset` (all four files with their `w` descriptors), `width`, `height` (800px file's pixel size),
+   - `alt` and `title` (describe what is visible; avoid personal names),
    - `data-caption` and `<figcaption>`,
    - `data-category` (space-separated: `granite`, `marble`, `gold`, `etched`, `portrait`, `installed`, `pet`).
+   Pages inside sub-folders reference the files as `../assets/images/projects/...`; the home page as `assets/images/projects/...`.
 4. Featured photos on the home page use the same markup in `index.html`.
+
+### Image loading strategy
+
+- Every photo has a `srcset` with the four widths and a `sizes` hint matching its layout slot, so phones and laptops pick the smallest file that still looks sharp on their screen.
+- Only the first hero slide loads with the page (and is preloaded). The other slides carry `data-src` and are fetched one step ahead as the slideshow advances.
+- All photos below the fold use `loading="lazy"`; the lightbox uses the 1200px file on small screens and the 1600px file on large ones.
+- The logo is a 9 KB WebP; the PNG versions are kept for favicons and social sharing.
 
 ### Changing the hero slideshow
 
