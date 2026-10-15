@@ -73,27 +73,42 @@ jobs:
             .gitignore
             .nojekyll
 
-      - name: Verify the live site serves this deployment
+      - name: Verify what is on the server (direct FTPS read, bypasses CDN caches)
+        if: steps.check.outputs.configured == 'true'
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.FTP_SERVER_DIR || './' }}
+        run: |
+          set +e
+          base="ftp://${FTP_SERVER}/${FTP_DIR#./}"
+          fetch() { curl -sS --ssl-reqd --max-time 60 -u "${FTP_USERNAME}:${FTP_PASSWORD}" "$base$1"; }
+          echo "== Files in the site root on the server =="
+          fetch "" | awk '{print $NF}' | tr '\n' ' '; echo
+          echo "== Contact page on the server =="
+          fetch "contact/index.html" > /tmp/srv-contact.html
+          grep -oE '>(Submit|Send|Prepare) Inquiry<' /tmp/srv-contact.html | head -1 || echo "button text not found"
+          grep -c 'data-endpoint="send.php"' /tmp/srv-contact.html | sed 's/^/send.php wired: /'
+          echo "== Mailer present on the server =="
+          fetch "contact/send.php" | grep -oE "const (RECIPIENT|SUBJECT) += '[^']*'" 
+          echo "== .htaccess on the server (cache rule) =="
+          fetch ".htaccess" | grep -E 'text/html|html\|php' 
+          echo "== Local copy for comparison =="
+          grep -oE '>(Submit|Send|Prepare) Inquiry<' contact/index.html | head -1
+
+      - name: Check the public URL (informational; a CDN bot challenge may hide the real page)
         if: steps.check.outputs.configured == 'true'
         run: |
           set +e
-          echo "== Fresh fetch of https://kafredlapida.com/contact/ (bypassing caches) =="
-          curl -sS -L --max-time 30 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
-               -o /tmp/live-contact.html -D /tmp/live-headers.txt "https://kafredlapida.com/contact/?nocache=$(date +%s)"
-          echo "-- response headers --"; grep -iE '^(HTTP/|last-modified|cache-control|server|location)' /tmp/live-headers.txt
-          echo "-- page checks --"
-          grep -o '<title>[^<]*</title>' /tmp/live-contact.html | head -1
-          grep -oE '>(Submit|Send|Prepare) Inquiry<' /tmp/live-contact.html | head -1 || echo "button text not found"
-          grep -c 'data-endpoint="send.php"' /tmp/live-contact.html | sed 's/^/send.php wired: /'
-          echo "-- local copy for comparison --"
-          grep -oE '>(Submit|Send|Prepare) Inquiry<' contact/index.html | head -1
-          echo "== Mailer endpoint (expects HTTP 405 JSON for GET) =="
-          curl -sS --max-time 30 -H 'Accept: application/json' -w ' [HTTP %{http_code}]\n' "https://kafredlapida.com/contact/send.php"
-          echo "== Root page title =="
-          curl -sS -L --max-time 30 -H 'Cache-Control: no-cache' "https://kafredlapida.com/?nocache=$(date +%s)" | grep -o '<title>[^<]*</title>' | head -1
-          echo "== HTTP -> HTTPS and www redirects =="
-          curl -sS -I --max-time 30 "http://kafredlapida.com/about/index.html" | grep -iE '^(HTTP/|location)'
-          curl -sS -I --max-time 30 "http://www.kafredlapida.com/" | grep -iE '^(HTTP/|location)'
+          body=$(curl -sS -L --max-time 30 -H 'Cache-Control: no-cache' -D /tmp/h.txt "https://kafredlapida.com/contact/?nocache=$(date +%s)")
+          if echo "$body" | grep -q 'Just a moment'; then
+            echo "::notice title=Public check skipped::kafredlapida.com is behind a Cloudflare bot challenge, so automated fetches cannot see the real page. Check in a browser; if an old page shows, purge the site cache in Bluehost."
+            grep -iE '^(HTTP/|server|cf-cache-status|cache-control|age)' /tmp/h.txt
+          else
+            grep -iE '^(HTTP/|server|cf-cache-status|cache-control|age|last-modified)' /tmp/h.txt
+            echo "$body" | grep -oE '>(Submit|Send|Prepare) Inquiry<' | head -1
+          fi
           true
 
       - name: Summary
