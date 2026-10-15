@@ -297,12 +297,16 @@
           <h2 id="form-heading">Send an Inquiry About a Lapida or Stone Installation</h2>
           <p class="lede" style="margin-bottom:1.5rem">Fill in the details below and we will receive your inquiry by email. We reply using the phone number or email address you give us.</p>
           <!--
-            The form posts to send.php (in this folder), which emails the inquiry from the
-            Bluehost PHP host. To change the recipient or subject, edit contact/send.php.
-            If data-endpoint is emptied, the form falls back to "prepare and send via
-            Messenger / phone" mode. See DEPLOYMENT.md.
+            The form is delivered by FormSubmit (https://formsubmit.co): submissions are emailed
+            to the address in the action / data-endpoint URLs with the subject in _subject.
+            To change the recipient, replace the email address in both URLs. See DEPLOYMENT.md.
           -->
-          <form id="inquiry-form" class="form-grid form-grid--2" action="send.php" method="post" data-endpoint="send.php" novalidate aria-labelledby="form-heading">
+          <form id="inquiry-form" class="form-grid form-grid--2" action="https://formsubmit.co/sherwingalindo18@gmail.com" method="post" data-endpoint="https://formsubmit.co/ajax/sherwingalindo18@gmail.com" novalidate aria-labelledby="form-heading">
+            <input type="hidden" name="_subject" value="KAFRED LAPIDA INQUIRY">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://kafredlapida.com/contact/?sent=1">
+            <input type="hidden" name="_replyto" value="" id="inq-replyto">
             <div class="field">
               <label for="inq-name">Name <span class="req" aria-hidden="true">*</span></label>
               <input id="inq-name" name="name" type="text" autocomplete="name" required aria-describedby="inq-name-error">
@@ -332,11 +336,11 @@
               <span class="field__hint" id="inq-message-hint">Include names and dates for engraving, preferred material, size, and where the stone will be installed.</span>
               <span class="field__error" id="inq-message-error" role="alert"></span>
             </div>
-            <div class="hp" aria-hidden="true"><label for="inq-company">Leave this field empty</label><input id="inq-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
+            <div class="hp" aria-hidden="true"><label for="inq-honey">Leave this field empty</label><input id="inq-honey" name="_honey" type="text" tabindex="-1" autocomplete="off"></div>
             <div class="field field--full">
               <button type="submit" class="btn btn--gold">Submit Inquiry</button>
             </div>
-            <p class="form-note field--full">Required fields are marked with an asterisk. Your details are emailed to Kafred only and are used solely to reply to your inquiry.</p>
+            <p class="form-note field--full">Required fields are marked with an asterisk. Your details are emailed to Kafred and used only to reply to your inquiry.</p>
           </form>
           <div id="form-status" class="form-status" hidden aria-live="polite"></div>
         </div>

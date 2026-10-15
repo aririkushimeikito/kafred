@@ -90,9 +90,8 @@ jobs:
           echo "== Contact page on the server =="
           fetch "contact/index.html" > /tmp/srv-contact.html
           grep -oE '>(Submit|Send|Prepare) Inquiry<' /tmp/srv-contact.html | head -1 || echo "button text not found"
-          grep -c 'data-endpoint="send.php"' /tmp/srv-contact.html | sed 's/^/send.php wired: /'
-          echo "== Mailer present on the server =="
-          fetch "contact/send.php" | grep -oE "const (RECIPIENT|SUBJECT) += '[^']*'" 
+          grep -oE 'formsubmit\.co/ajax/[^"]+' /tmp/srv-contact.html | head -1 | sed 's/^/FormSubmit endpoint: /'
+          grep -oE 'name="_subject" value="[^"]+"' /tmp/srv-contact.html | head -1
           echo "== .htaccess on the server (cache rule) =="
           fetch ".htaccess" | grep -E 'text/html|html\|php' 
           echo "== Local copy for comparison =="
