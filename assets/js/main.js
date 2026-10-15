@@ -82,9 +82,10 @@
       img.src = img.getAttribute("data-src");
       img.removeAttribute("data-src"); img.removeAttribute("data-srcset");
     };
+    var loadAll = function () { slides.forEach(function (_, n) { loadSlide(n); }); };
     var goTo = function (i) {
       index = (i + slides.length) % slides.length;
-      loadSlide(index); loadSlide(index + 1);
+      loadSlide(index); loadSlide(index + 1); loadSlide(index + 2);
       slides.forEach(function (s, n) {
         var active = n === index;
         s.classList.toggle("is-active", active);
@@ -101,9 +102,10 @@
     };
     var restart = function () { start(); };
 
-    slideshow.querySelector("[data-slide-prev]").addEventListener("click", function () { goTo(index - 1); restart(); });
-    slideshow.querySelector("[data-slide-next]").addEventListener("click", function () { goTo(index + 1); restart(); });
-    dots.forEach(function (d) { d.addEventListener("click", function () { goTo(parseInt(d.getAttribute("data-slide-to"), 10)); restart(); }); });
+    // Any manual navigation means the visitor is browsing: fetch every remaining slide now.
+    slideshow.querySelector("[data-slide-prev]").addEventListener("click", function () { loadAll(); goTo(index - 1); restart(); });
+    slideshow.querySelector("[data-slide-next]").addEventListener("click", function () { loadAll(); goTo(index + 1); restart(); });
+    dots.forEach(function (d) { d.addEventListener("click", function () { loadAll(); goTo(parseInt(d.getAttribute("data-slide-to"), 10)); restart(); }); });
     if (pauseBtn) {
       if (reduceMotion) { pauseBtn.hidden = true; }
       pauseBtn.addEventListener("click", function () {
@@ -127,7 +129,7 @@
     slideshow.addEventListener("touchend", function (e) {
       if (sx === null) { return; }
       var dx = e.changedTouches[0].clientX - sx; sx = null;
-      if (Math.abs(dx) > 40) { goTo(dx > 0 ? index - 1 : index + 1); restart(); }
+      if (Math.abs(dx) > 40) { loadAll(); goTo(dx > 0 ? index - 1 : index + 1); restart(); }
     }, { passive: true });
     goTo(0);
     start();
