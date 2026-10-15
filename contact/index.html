@@ -295,14 +295,14 @@
         <div class="reveal">
           <p class="eyebrow">Inquiry form</p>
           <h2 id="form-heading">Send an Inquiry About a Lapida or Stone Installation</h2>
-          <p class="lede" style="margin-bottom:1.5rem">Fill in the details below. The form prepares your message so you can send it to us through Facebook Messenger, or call us with the details in front of you.</p>
+          <p class="lede" style="margin-bottom:1.5rem">Fill in the details below and we will receive your inquiry by email. We reply using the phone number or email address you give us.</p>
           <!--
-            FORM ENDPOINT (optional): to have submissions delivered automatically, set
-            data-endpoint to the POST URL of a form service (e.g. https://formspree.io/f/XXXX).
-            Leave it empty and the form stays in "prepare and send via Messenger / phone" mode.
-            See DEPLOYMENT.md.
+            The form posts to send.php (in this folder), which emails the inquiry from the
+            Bluehost PHP host. To change the recipient or subject, edit contact/send.php.
+            If data-endpoint is emptied, the form falls back to "prepare and send via
+            Messenger / phone" mode. See DEPLOYMENT.md.
           -->
-          <form id="inquiry-form" class="form-grid form-grid--2" action="https://www.facebook.com/kafred.services" method="get" data-endpoint="" novalidate aria-labelledby="form-heading">
+          <form id="inquiry-form" class="form-grid form-grid--2" action="send.php" method="post" data-endpoint="send.php" novalidate aria-labelledby="form-heading">
             <div class="field">
               <label for="inq-name">Name <span class="req" aria-hidden="true">*</span></label>
               <input id="inq-name" name="name" type="text" autocomplete="name" required aria-describedby="inq-name-error">
@@ -334,9 +334,9 @@
             </div>
             <div class="hp" aria-hidden="true"><label for="inq-company">Leave this field empty</label><input id="inq-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
             <div class="field field--full">
-              <button type="submit" class="btn btn--gold">Prepare Inquiry</button>
+              <button type="submit" class="btn btn--gold">Send Inquiry</button>
             </div>
-            <p class="form-note field--full">Required fields are marked with an asterisk. This website does not store or email your details by itself; the message is sent only when you send it to us.</p>
+            <p class="form-note field--full">Required fields are marked with an asterisk. Your details are emailed to Kafred only and are used solely to reply to your inquiry.</p>
           </form>
           <div id="form-status" class="form-status" hidden aria-live="polite"></div>
         </div>

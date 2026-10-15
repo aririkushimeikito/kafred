@@ -256,10 +256,10 @@
   }
 
   /* ---------- Inquiry form ----------
-     Honest static-site behaviour:
-     - If the <form> has a data-endpoint (e.g. a Formspree/Basin/Netlify-style
-       POST endpoint), the form is submitted with fetch() and the real result
-       is reported.
+     Honest behaviour:
+     - If the <form> has a data-endpoint (contact/send.php on the Bluehost PHP
+       host, or any form-service POST URL), the form is submitted with fetch()
+       and the real result is reported.
      - If no endpoint is configured, the form assembles the visitor's message
        and offers to copy it or send it through Facebook Messenger, and to
        call the shop. Nothing is ever reported as "sent" unless it was.
@@ -267,6 +267,9 @@
   var form = document.getElementById("inquiry-form");
   if (form) {
     var endpoint = (form.getAttribute("data-endpoint") || "").trim();
+    // A relative PHP endpoint only works on the PHP host (Bluehost). On the static
+    // GitHub Pages preview, or when opened as a local file, fall back to prepare mode.
+    if (endpoint && !/^https?:/i.test(endpoint) && (/github\.io$/i.test(location.hostname) || location.protocol === "file:")) { endpoint = ""; }
     var statusBox = document.getElementById("form-status");
     var submitBtn = form.querySelector('button[type="submit"]');
     var fields = {
@@ -348,12 +351,16 @@
       var data = new FormData(form);
       fetch(endpoint, { method: "POST", body: data, headers: { Accept: "application/json" } })
         .then(function (res) {
-          if (res.ok) {
-            form.reset();
-            showStatus("<p><strong>Thank you.</strong> Your inquiry was submitted. We will get back to you using the contact details you provided.</p>", false);
-          } else {
-            throw new Error("Request failed with status " + res.status);
-          }
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            if (res.ok && data.ok !== false) {
+              form.reset();
+              showStatus("<p><strong>Thank you.</strong> Your inquiry has been sent to Kafred. We will get back to you using the contact details you provided.</p>", false);
+            } else if (res.status === 422 && data.errors && data.errors.length) {
+              showStatus("<p><strong>Please check the form.</strong> " + data.errors.map(function (e) { return String(e).replace(/</g, "&lt;"); }).join(" ") + "</p>", true);
+            } else {
+              throw new Error("Request failed with status " + res.status);
+            }
+          });
         })
         .catch(function () {
           showStatus('<p><strong>Your message could not be sent.</strong> Please call <a href="tel:+639530849511">+63 953 084 9511</a> or message us on <a href="https://m.me/kafred.services" target="_blank" rel="noopener">Facebook Messenger</a>.</p>', true);

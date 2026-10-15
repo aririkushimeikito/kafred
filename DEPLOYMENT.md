@@ -95,21 +95,24 @@ The supplied short link (`https://maps.app.goo.gl/MZECwJ6J6NqyNUKT8`) is used fo
 
 > The development environment used to build this site could not reach google.com, so the embed URL was not rendered in a browser there. The URL format is the standard address-query embed. Please open `/contact/` after deployment and confirm the map shows the correct location; if it does not, use the "Embed a map" code from Google Maps as described above.
 
-## 5. Inquiry form
+## 5. Inquiry form (emails the shop)
 
-A static site cannot send email on its own. The form on `/contact/` therefore works in one of two honest modes, controlled by the `data-endpoint` attribute on `<form id="inquiry-form">` in `contact/index.html`:
+The Contact page form posts to **`contact/send.php`**, a small PHP script that runs on the Bluehost host and emails each inquiry to the shop.
 
-**Default (no endpoint, `data-endpoint=""`)** — "Prepare and send" mode. After validation the form builds the message text and shows it with buttons to *Copy message*, *Open Facebook Messenger* (`https://m.me/kafred.services`) and *Call*. The visitor sends the message themselves. Nothing is ever reported as "sent".
+- **Recipient:** `sherwingalindo18@gmail.com`
+- **Subject:** `KAFRED LAPIDA INQUIRY`
+- **Reply-To:** the customer's email address when they gave one, so you can reply straight from Gmail
+- **From:** `noreply@kafredlapida.com` (an address on the hosting domain, which Bluehost's mail server accepts; it does not need to be a real mailbox)
 
-**With a form endpoint** — set `data-endpoint` to the POST URL of a form-handling service, for example:
+To change the recipient or subject, edit the two constants at the top of `contact/send.php` and push; the deploy workflow uploads it.
 
-```html
-<form id="inquiry-form" ... data-endpoint="https://formspree.io/f/your-form-id" ...>
-```
+What the script does: validates the fields server-side (the same rules as the page), ignores submissions that fill the hidden honeypot field, strips line breaks from header values to block email header injection, and returns JSON to the page's JavaScript (or a plain HTML page when JavaScript is off). The page shows "has been sent" **only** when the mail server accepted the message; otherwise it shows the phone and Messenger alternatives.
 
-The script then submits the fields (`name`, `contact`, `service`, `message`, plus a `company` honeypot) with `fetch()` and shows a success message **only** when the service responds with HTTP 2xx; otherwise it shows the phone and Messenger alternatives. Services that accept this pattern include Formspree, Basin, Getform and Web3Forms (Web3Forms also needs a hidden `access_key` input). Netlify Forms works differently: add `data-netlify="true"` and `name="inquiry"` to the form, change `method` to `post` and remove `novalidate`/the JavaScript prepare behaviour if you want Netlify to capture submissions natively.
+**Deliverability.** Bluehost sends through its own mail server. If inquiries land in Gmail's spam folder, open *Advanced → Email Deliverability* in Bluehost and let it add the SPF and DKIM records for kafredlapida.com (one click when DNS is managed by Bluehost). Then mark one test message as "Not spam" in Gmail.
 
-Whichever option you choose, test a submission after deployment.
+**Testing after deployment.** Submit the form on https://kafredlapida.com/contact/ with your own details and confirm the email arrives with the subject above. The PHP script cannot run on the GitHub Pages preview or when the files are opened locally; there the form falls back to "prepare and send via Messenger / phone" mode automatically.
+
+**Switching to a form service instead.** Set `data-endpoint` on `<form id="inquiry-form">` in `contact/index.html` to the service's POST URL (Formspree, Basin, Getform, Web3Forms). The JavaScript sends the fields with `fetch()` and reports success only on an HTTP 2xx response. Clearing `data-endpoint` entirely restores the prepare-and-send mode.
 
 ## 6. Launch checklist
 
@@ -117,7 +120,7 @@ Whichever option you choose, test a submission after deployment.
 - [ ] Confirm `https://kafredlapida.com/sitemap.xml`, `/robots.txt`, `/llms.txt` and `/site.webmanifest` load.
 - [ ] Add the site in Google Search Console (domain property) and Bing Webmaster Tools; submit `sitemap.xml`; use the Rich Results Test on each page to confirm the LocalBusiness, FAQ, Service and ImageGallery data is read.
 - [ ] Create or claim the Google Business Profile with exactly the same name, address and phone number as the website, and link it to https://kafredlapida.com. Add the website link to the Facebook page's *About* section.
-- [ ] Open `/contact/` and check the map, the directions link and the form.
+- [ ] Open `/contact/` and check the map, the directions link, and send a test inquiry through the form; confirm it arrives at sherwingalindo18@gmail.com with subject KAFRED LAPIDA INQUIRY.
 - [ ] Test on a phone: tap-to-call, Facebook link, menu, gallery lightbox.
 - [ ] Optionally add analytics (none is included).
 
