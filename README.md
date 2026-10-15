@@ -2,7 +2,7 @@
 
 A hand-built static website for **Kafred Granite & Marble Installation Services**, a lapida (gravestone) engraving maker and granite and marble installer in Burgos, Rodriguez (Montalban), Rizal, Philippines.
 
-- Semantic HTML5, modern CSS3 and vanilla JavaScript only. No frameworks, no build step, no backend.
+- Semantic HTML5, modern CSS3 and vanilla JavaScript only. No frameworks, no build step, no database; one small PHP script emails the contact form.
 - Five pages with clean URLs, local SEO metadata, FAQ sections, JSON-LD structured data (LocalBusiness, WebSite, WebPage/AboutPage/ContactPage/CollectionPage, Service, FAQPage, ImageGallery, BreadcrumbList), image sitemap, robots.txt and llms.txt.
 - Real project photographs supplied by the company, optimised to WebP in two sizes.
 - Responsive, mobile-first layout tested from 360px to 1440px, with keyboard-accessible menu, filters and lightbox.
@@ -30,6 +30,7 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 ├── services/index.html        Services
 ├── our-work/index.html        Our Work (gallery, filters, lightbox)
 ├── contact/index.html         Contact (map, inquiry form)
+├── contact/send.php           PHP mailer for the inquiry form (runs on Bluehost)
 ├── assets/
 │   ├── css/style.css          All styles (design tokens in :root)
 │   ├── js/main.js             Navigation, filters, lightbox, form, year
@@ -76,7 +77,7 @@ npx serve .
 | Facebook  | https://www.facebook.com/kafred.services |
 | Google Maps | https://maps.app.goo.gl/MZECwJ6J6NqyNUKT8 |
 
-No email address, business hours, founding year, prices, reviews or certifications are published, because none were supplied. Do not add them unless they are confirmed.
+No business hours, founding year, prices, reviews or certifications are published, because none were supplied. The inquiry email address lives only in `contact/send.php`, not in the public HTML, to limit spam.
 
 ## Editing content
 
@@ -131,7 +132,7 @@ Gold text is only used on dark backgrounds; on the light sections the darker gol
 - Home-page ticker (pure CSS animation, paused on hover, disabled under `prefers-reduced-motion`).
 - Gallery filters (Our Work) with live status text.
 - Lightbox with previous/next, arrow keys, Escape, swipe and focus trapping.
-- Inquiry form validation and "prepare and send" behaviour (see `DEPLOYMENT.md`).
+- Inquiry form: validated client-side, emailed to the shop by `contact/send.php` on the Bluehost PHP host (subject "KAFRED LAPIDA INQUIRY"); falls back to phone / Messenger if sending fails, and to "prepare and send" mode on static previews (see `DEPLOYMENT.md`).
 - Subtle reveal-on-scroll (disabled under reduced motion).
 - Dynamic copyright year.
 
@@ -147,4 +148,4 @@ git archive --format=zip --prefix=Kafred-Granite-Marble-Website/ -o Kafred-Grani
 
 ## External dependencies
 
-None at runtime, apart from the Google Maps `<iframe>` on the Contact page. Fonts are self-hosted. No analytics or third-party scripts are included.
+None at runtime, apart from the Google Maps `<iframe>` on the Contact page and PHP's `mail()` on the host for the inquiry form. Fonts are self-hosted. No analytics or third-party scripts are included.
