@@ -256,20 +256,13 @@
   }
 
   /* ---------- Inquiry form ----------
-     Honest behaviour:
-     - If the <form> has a data-endpoint (contact/send.php on the Bluehost PHP
-       host, or any form-service POST URL), the form is submitted with fetch()
-       and the real result is reported.
-     - If no endpoint is configured, the form assembles the visitor's message
-       and offers to copy it or send it through Facebook Messenger, and to
-       call the shop. Nothing is ever reported as "sent" unless it was.
-  ---------------------------------------------------------------------- */
+     Submits to the FormSubmit endpoint in data-endpoint (AJAX, JSON reply).
+     The page reports success only when the service confirms it; otherwise it
+     shows the phone and Messenger alternatives. Without JavaScript the form
+     posts normally to FormSubmit, which returns the visitor to ?sent=1. */
   var form = document.getElementById("inquiry-form");
   if (form) {
-    var endpoint = (form.getAttribute("data-endpoint") || "").trim();
-    // A relative PHP endpoint only works on the PHP host (Bluehost). On the static
-    // GitHub Pages preview, or when opened as a local file, fall back to prepare mode.
-    if (endpoint && !/^https?:/i.test(endpoint) && (/github\.io$/i.test(location.hostname) || location.protocol === "file:")) { endpoint = ""; }
+    var endpoint = (form.getAttribute("data-endpoint") || "").trim() || form.getAttribute("action");
     var statusBox = document.getElementById("form-status");
     var submitBtn = form.querySelector('button[type="submit"]');
     var fields = {
@@ -278,20 +271,22 @@
       service: form.querySelector("#inq-service"),
       message: form.querySelector("#inq-message")
     };
+    var replyTo = form.querySelector("#inq-replyto");
+    var fallbackLinks = ' Please call <a href="tel:+639530849511">+63 953 084 9511</a> or message us on <a href="https://m.me/kafred.services" target="_blank" rel="noopener">Facebook Messenger</a>.';
     var setError = function (field, msg) {
       var err = document.getElementById(field.id + "-error");
       field.setAttribute("aria-invalid", msg ? "true" : "false");
       if (err) { err.textContent = msg || ""; err.classList.toggle("is-visible", !!msg); }
     };
+    var isEmail = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); };
     var validate = function () {
       var ok = true;
       Object.keys(fields).forEach(function (k) { setError(fields[k], ""); });
       if (!fields.name.value.trim()) { setError(fields.name, "Please enter your name."); ok = false; }
       var c = fields.contact.value.trim();
       var looksPhone = /^[+\d][\d\s().-]{6,}$/.test(c);
-      var looksEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c);
       if (!c) { setError(fields.contact, "Please enter a phone number or email address."); ok = false; }
-      else if (!looksPhone && !looksEmail) { setError(fields.contact, "Please enter a valid phone number or email address."); ok = false; }
+      else if (!looksPhone && !isEmail(c)) { setError(fields.contact, "Please enter a valid phone number or email address."); ok = false; }
       if (!fields.service.value) { setError(fields.service, "Please choose the service you are asking about."); ok = false; }
       if (fields.message.value.trim().length < 10) { setError(fields.message, "Please describe your request in a few words (at least 10 characters)."); ok = false; }
       if (!ok) {
@@ -307,63 +302,40 @@
       statusBox.setAttribute("tabindex", "-1");
       statusBox.focus();
     };
-    var buildMessage = function () {
-      return "Inquiry for Kafred Granite & Marble Installation Services\n\n" +
-        "Name: " + fields.name.value.trim() + "\n" +
-        "Phone / Email: " + fields.contact.value.trim() + "\n" +
-        "Service: " + fields.service.options[fields.service.selectedIndex].text + "\n\n" +
-        "Message:\n" + fields.message.value.trim();
-    };
+    var escapeHtml = function (v) { return String(v).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); };
+
+    // Returned here by the no-JavaScript path (FormSubmit's _next redirect)
+    if (/[?&]sent=1/.test(location.search)) {
+      showStatus("<p><strong>Thank you.</strong> Your inquiry has been sent to Kafred. We will get back to you using the contact details you provided.</p>", false);
+      if (window.history && history.replaceState) { history.replaceState(null, "", location.pathname); }
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      if (form.querySelector(".hp input") && form.querySelector(".hp input").value) { return; } // honeypot
+      var honey = form.querySelector('input[name="_honey"]');
+      if (honey && honey.value) { return; }
       if (!validate()) { return; }
+      if (replyTo) { replyTo.value = isEmail(fields.contact.value.trim()) ? fields.contact.value.trim() : ""; }
 
-      if (!endpoint) {
-        var text = buildMessage();
-        showStatus(
-          '<div class="inquiry-ready">' +
-            "<p><strong>Your inquiry is ready.</strong> This website does not send messages by itself. Copy the text below and send it to us on Facebook Messenger, or call us directly.</p>" +
-            '<label class="visually-hidden" for="inquiry-text">Your inquiry text</label>' +
-            '<textarea id="inquiry-text" class="inquiry-ready__text" readonly></textarea>' +
-            '<div class="btn-row">' +
-              '<button type="button" class="btn btn--gold" id="copy-inquiry">Copy message</button>' +
-              '<a class="btn btn--outline" href="https://m.me/kafred.services" target="_blank" rel="noopener">Open Facebook Messenger</a>' +
-              '<a class="btn btn--outline" href="tel:+639530849511">Call +63 953 084 9511</a>' +
-            "</div>" +
-            '<p class="form-note" id="copy-note" aria-live="polite"></p>' +
-          "</div>", false);
-        var ta = document.getElementById("inquiry-text");
-        ta.value = text;
-        var note = document.getElementById("copy-note");
-        document.getElementById("copy-inquiry").addEventListener("click", function () {
-          var done = function () { note.textContent = "Message copied. Paste it into Messenger to send it to us."; };
-          var fail = function () { ta.focus(); ta.select(); note.textContent = "Select the text above and copy it manually."; };
-          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, fail); } else { fail(); }
-        });
-        return;
-      }
-
-      // Real endpoint configured: submit and report the actual result.
       submitBtn.disabled = true;
       var original = submitBtn.textContent;
       submitBtn.textContent = "Submitting…";
       var data = new FormData(form);
       fetch(endpoint, { method: "POST", body: data, headers: { Accept: "application/json" } })
         .then(function (res) {
-          return res.json().catch(function () { return {}; }).then(function (data) {
-            if (res.ok && data.ok !== false) {
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            var success = res.ok && (body.success === true || body.success === "true");
+            if (success) {
               form.reset();
               showStatus("<p><strong>Thank you.</strong> Your inquiry has been sent to Kafred. We will get back to you using the contact details you provided.</p>", false);
-            } else if (res.status === 422 && data.errors && data.errors.length) {
-              showStatus("<p><strong>Please check the form.</strong> " + data.errors.map(function (e) { return String(e).replace(/</g, "&lt;"); }).join(" ") + "</p>", true);
             } else {
-              throw new Error("Request failed with status " + res.status);
+              var reason = body && body.message ? " " + escapeHtml(body.message) : "";
+              showStatus("<p><strong>Your message could not be sent.</strong>" + reason + fallbackLinks + "</p>", true);
             }
           });
         })
         .catch(function () {
-          showStatus('<p><strong>Your message could not be sent.</strong> Please call <a href="tel:+639530849511">+63 953 084 9511</a> or message us on <a href="https://m.me/kafred.services" target="_blank" rel="noopener">Facebook Messenger</a>.</p>', true);
+          showStatus("<p><strong>Your message could not be sent.</strong>" + fallbackLinks + "</p>", true);
         })
         .finally(function () { submitBtn.disabled = false; submitBtn.textContent = original; });
     });

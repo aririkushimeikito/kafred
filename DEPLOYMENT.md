@@ -95,24 +95,22 @@ The supplied short link (`https://maps.app.goo.gl/MZECwJ6J6NqyNUKT8`) is used fo
 
 > The development environment used to build this site could not reach google.com, so the embed URL was not rendered in a browser there. The URL format is the standard address-query embed. Please open `/contact/` after deployment and confirm the map shows the correct location; if it does not, use the "Embed a map" code from Google Maps as described above.
 
-## 5. Inquiry form (emails the shop)
+## 5. Inquiry form (delivered by FormSubmit)
 
-The Contact page form posts to **`contact/send.php`**, a small PHP script that runs on the Bluehost host and emails each inquiry to the shop.
+The Contact page form is delivered by **FormSubmit** (https://formsubmit.co), a free form-to-email service that needs no server code.
 
-- **Recipient:** `sherwingalindo18@gmail.com`
-- **Subject:** `KAFRED LAPIDA INQUIRY`
-- **Reply-To:** the customer's email address when they gave one, so you can reply straight from Gmail
-- **From:** `noreply@kafredlapida.com` (an address on the hosting domain, which Bluehost's mail server accepts; it does not need to be a real mailbox)
+- **Recipient:** `sherwingalindo18@gmail.com` (in the form's `action` and `data-endpoint` URLs in `contact/index.html`)
+- **Subject:** `KAFRED LAPIDA INQUIRY` (hidden `_subject` field)
+- **Reply-To:** the customer's email address when they gave one (`_replyto`, filled by the page script)
+- **Layout:** FormSubmit's table template (`_template`), no captcha page (`_captcha=false`), honeypot field `_honey`
 
-To change the recipient or subject, edit the two constants at the top of `contact/send.php` and push; the deploy workflow uploads it.
+**One-time activation (required).** The first time the form is submitted, FormSubmit emails sherwingalindo18@gmail.com a message titled roughly "Activate form" with a confirmation link. Click it once. Until then submissions are held and nothing is delivered. Check the spam folder if it does not arrive within a few minutes.
 
-What the script does: validates the fields server-side (the same rules as the page), ignores submissions that fill the hidden honeypot field, strips line breaks from header values to block email header injection, and returns JSON to the page's JavaScript (or a plain HTML page when JavaScript is off). The page shows "has been sent" **only** when the mail server accepted the message; otherwise it shows the phone and Messenger alternatives.
+**Hiding the email address.** After activation, FormSubmit's confirmation page shows a random *alias* string (for example `https://formsubmit.co/el/xxxxxxx`). Replacing the email address with that alias in both URLs in `contact/index.html` keeps the address out of the page source. Optional, but it reduces spam.
 
-**Deliverability.** Bluehost sends through its own mail server. If inquiries land in Gmail's spam folder, open *Advanced → Email Deliverability* in Bluehost and let it add the SPF and DKIM records for kafredlapida.com (one click when DNS is managed by Bluehost). Then mark one test message as "Not spam" in Gmail.
+**How submission works.** With JavaScript on, the page posts to `https://formsubmit.co/ajax/<address>` and shows "has been sent" only when FormSubmit replies with success; otherwise it shows FormSubmit's message plus the phone and Messenger links. Without JavaScript the form posts normally and FormSubmit redirects back to `/contact/?sent=1`, where the page shows the same confirmation.
 
-**Testing after deployment.** Submit the form on https://kafredlapida.com/contact/ with your own details and confirm the email arrives with the subject above. The PHP script cannot run on the GitHub Pages preview or when the files are opened locally; there the form falls back to "prepare and send via Messenger / phone" mode automatically.
-
-**Switching to a form service instead.** Set `data-endpoint` on `<form id="inquiry-form">` in `contact/index.html` to the service's POST URL (Formspree, Basin, Getform, Web3Forms). The JavaScript sends the fields with `fetch()` and reports success only on an HTTP 2xx response. Clearing `data-endpoint` entirely restores the prepare-and-send mode.
+**Changing the recipient.** Replace the email address in both the `action` and `data-endpoint` attributes of the form, and in the `_next` URL if the domain changes. The new address must complete the activation step above.
 
 ## 6. Launch checklist
 
@@ -120,7 +118,7 @@ What the script does: validates the fields server-side (the same rules as the pa
 - [ ] Confirm `https://kafredlapida.com/sitemap.xml`, `/robots.txt`, `/llms.txt` and `/site.webmanifest` load.
 - [ ] Add the site in Google Search Console (domain property) and Bing Webmaster Tools; submit `sitemap.xml`; use the Rich Results Test on each page to confirm the LocalBusiness, FAQ, Service and ImageGallery data is read.
 - [ ] Create or claim the Google Business Profile with exactly the same name, address and phone number as the website, and link it to https://kafredlapida.com. Add the website link to the Facebook page's *About* section.
-- [ ] Open `/contact/` and check the map, the directions link, and send a test inquiry through the form; confirm it arrives at sherwingalindo18@gmail.com with subject KAFRED LAPIDA INQUIRY.
+- [ ] Open `/contact/`, send a test inquiry, click the FormSubmit activation link that arrives at sherwingalindo18@gmail.com, then send a second test and confirm it arrives with subject KAFRED LAPIDA INQUIRY.
 - [ ] Test on a phone: tap-to-call, Facebook link, menu, gallery lightbox.
 - [ ] Optionally add analytics (none is included).
 
