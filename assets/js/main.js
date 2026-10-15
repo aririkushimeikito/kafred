@@ -347,7 +347,7 @@
       // Real endpoint configured: submit and report the actual result.
       submitBtn.disabled = true;
       var original = submitBtn.textContent;
-      submitBtn.textContent = "Sending…";
+      submitBtn.textContent = "Submitting…";
       var data = new FormData(form);
       fetch(endpoint, { method: "POST", body: data, headers: { Accept: "application/json" } })
         .then(function (res) {
