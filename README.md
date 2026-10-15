@@ -101,6 +101,7 @@ All content is plain HTML. The header, footer and CTA band are repeated in each 
 - Only the first hero slide loads with the page (and is preloaded). The other slides carry `data-src` and are fetched one step ahead as the slideshow advances.
 - All photos below the fold use `loading="lazy"`; the lightbox uses the 1200px file on small screens and the 1600px file on large ones.
 - The logo is a 9 KB WebP; the PNG versions are kept for favicons and social sharing.
+- `style.css` and `main.js` are linked with a `?v=<hash>` query string that changes whenever their content changes, so browsers and CDNs fetch the new file immediately even though those files are cached for a month. If you edit them by hand, change the `?v=` value in all six HTML files (or re-run the generator) so visitors get the update.
 
 ### Changing the hero slideshow
 
