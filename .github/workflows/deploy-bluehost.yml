@@ -83,7 +83,8 @@ jobs:
         run: |
           set +e
           base="ftp://${FTP_SERVER}/${FTP_DIR#./}"
-          fetch() { curl -sS --ssl-reqd --max-time 60 -u "${FTP_USERNAME}:${FTP_PASSWORD}" "$base$1"; }
+          # -k: Bluehost's FTP certificate does not name the server hostname; this is a read-only check of our own files
+          fetch() { curl -sS -k --ssl-reqd --max-time 60 -u "${FTP_USERNAME}:${FTP_PASSWORD}" "$base$1"; }
           echo "== Files in the site root on the server =="
           fetch "" | awk '{print $NF}' | tr '\n' ' '; echo
           echo "== Contact page on the server =="
