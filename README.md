@@ -37,7 +37,8 @@ Clean URLs come from the folder structure (each page is an `index.html` inside i
 │   ├── icons/                 Favicon PNGs (16–512px)
 │   └── images/
 │       ├── logo.png           Official logo (circular, transparent background)
-│       ├── logo-200.webp      Header/footer size (WebP with transparency)
+│       ├── logo-rect.png      Rectangular logo (original artwork, 4:3 crop)
+│       ├── logo-rect-320.webp Header/footer size
 │       ├── favicon.png        512px favicon source
 │       ├── og-image.jpg       Social-sharing image (1200×630)
 │       └── projects/          Project photos at 480/800/1200/1600px WebP (plus one 4:3 hero crop)
@@ -100,7 +101,7 @@ All content is plain HTML. The header, footer and CTA band are repeated in each 
 - Every photo has a `srcset` with the four widths and a `sizes` hint matching its layout slot, so phones and laptops pick the smallest file that still looks sharp on their screen.
 - Only the first hero slide loads with the page (and is preloaded). The other slides carry `data-src` and are fetched one step ahead as the slideshow advances.
 - All photos below the fold use `loading="lazy"`; the lightbox uses the 1200px file on small screens and the 1600px file on large ones.
-- The logo is a 9 KB WebP; the PNG versions are kept for favicons and social sharing.
+- The header/footer logo is a small WebP; the PNG versions are kept for favicons and social sharing.
 - `style.css` and `main.js` are linked with a `?v=<hash>` query string that changes whenever their content changes, so browsers and CDNs fetch the new file immediately even though those files are cached for a month. If you edit them by hand, change the `?v=` value in all six HTML files (or re-run the generator) so visitors get the update.
 
 ### Changing the hero slideshow
@@ -109,7 +110,7 @@ The home hero is a crossfade slideshow of seven `<figure class="hero-slide">` bl
 
 ### Logo and favicon
 
-`assets/images/logo.png` is the supplied logo cropped to its circular badge with a transparent background. The favicons in `assets/icons/` and `favicon.ico` are generated from it. If the logo changes, regenerate these files at the same sizes.
+The header and footer use `assets/images/logo-rect-320.webp`, a rectangular 4:3 crop of the supplied logo artwork with its white background. `assets/images/logo.png` is the circular badge with a transparent background, used for the favicons in `assets/icons/`, `favicon.ico` and the social-sharing image. If the logo changes, regenerate these files at the same sizes.
 
 ### Colours and type
 
